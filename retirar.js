@@ -1,27 +1,33 @@
-localStorage.setItem("usuario", "jzapata@gmail.com");
+// Simulación de usuario ya logueado (solo para pruebas)
+if (!localStorage.getItem("usuario")) {
+    localStorage.setItem("usuario", "jzapata@gmail.com");
+}
+
+// Establecer saldo inicial si no existe
+if (!localStorage.getItem("saldo")) {
+    localStorage.setItem("saldo", "200000");
+}
 
 const usuarioRetiro = localStorage.getItem("usuario");
 
+document.getElementById("retirar").addEventListener('click', function retirar(event) {
+    event.preventDefault(); // Evita el envío del formulario
 
-document.getElementById("retirar").addEventListener('click', function retirar() {
+    const usuario = document.getElementById("usuario-retiro").value;
+    const monto = parseFloat(document.getElementById("cantidad").value);
+    const categoria = document.getElementById("categoria").value;
+    let saldo = parseFloat(localStorage.getItem("saldo"));
 
-    let usuario = document.getElementById("usuario-retiro").value;
-    let monto = parseFloat(document.getElementById("cantidad").value);
-    let categoria = document.getElementById("categoria").value; //aun no se utiliza llegara a utilizarse en ver movimiento
-    let montoprovicional = 200000;
-
-    if (usuario == usuarioRetiro) {
-
-        if (monto>0 && monto<= montoprovicional) {
-
-            montoprovicional-=monto;
-            alert(`Retiro exitoso!,ahora tu saldo es de: ${montoprovicional}`)
-        }else{
-            alert("monto insuficiente")
+    if (usuario === usuarioRetiro) {
+        if (monto > 0 && monto <= saldo) {
+            saldo -= monto;
+            localStorage.setItem("saldo", saldo);
+            alert(`¡Retiro exitoso! Ahora tu saldo es de: $${saldo}`);
+            // Aquí podrías guardar la categoría en movimientos también
+        } else {
+            alert("Monto inválido o saldo insuficiente.");
         }
-
-    }else{
-        alert("Usurio no existente")
+    } else {
+        alert("Usuario no existente.");
     }
-})
-
+});
